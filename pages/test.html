@@ -21,11 +21,9 @@
             methods: {
                 getInfo: function (){
                     var self=this;
-                    this.ajax.get("hello",{
-                        target: 123456,
-                        address: "池州市"
-                    },function (data){
-                        self.msg=data[1].name
+                  
+                    post("consumer/test",function (data){
+                        console.log(data);
                     },"json");
                 }
             }
