@@ -33,30 +33,45 @@
 		       <button type="button" class="layui-btn layui-btn-radius" id="test8" style="width: 100%;height: 100%;" ><i class="layui-icon"></i>选择文件</button>
 		    </div>
 		<div>
-		<br /><br /><br />
+		<br />
 		 <div class="layui-row">
 		    <div class="layui-col-md4 layui-col-md-offset4">
 		      <button type="button" class="layui-btn layui-btn-radius layui-btn-normal" style="width: 100%;" id="test9">开始上传</button>
 		    </div>
 		<div>
-		<br /><br />
-		<button type="button" class="layui-btn layui-btn-radius" onclick="navTo()"  style="width: 100%;height: 100%;" >跳转页面</button>
+		<br />
+		<button id="download" type="button" class="layui-btn layui-btn-radius layui-hide" onclick="download(this)"  style="width: 100%;height: 100%;" ></button>
+		<br />
+		<!--<button type="button" class="layui-btn layui-btn-radius" onclick="navTo()"  style="width: 100%;height: 100%;" >跳转页面</button>-->
 	</body>
 	<script src="./js/layui/layui.js" charset="utf-8"></script>
+	<script src="./js/vue-ajax.js"></script>
 	<script>
+		
 		layui.use('upload', function(){
 		  var $ = layui.jquery
 		  upload = layui.upload;
 			//选完文件后不自动上传
 		  layui.upload.render({
 		    elem: '#test8',
-		    url: '/upload/',
+		    url: getHead()+'book/upload',
 		    auto: false,
+		    data: addData({}),
 		    accept: 'file',
 		    //,multiple: true
 		    bindAction: '#test9',
 		    done: function(res){
-		      console.log(res)
+		      if(res!=null && res.code=='success'){
+		      	console.log(res);
+		      	var book = res.data.book;
+		      	var book_id = book.id;
+		      	var book_name = "<<"+book.book_name+"."+book.book_format+">>";
+		      	var d = $("#download");
+		      	console.log(book_name);
+		      	d.text("下载"+book_name);
+		      	d.attr("data-id",book_id);
+		      	d.removeClass("layui-hide");
+		      }
 		    }
 		  });	
 		});	
@@ -74,6 +89,21 @@
 		
 		function navTo(){
 			window.location.href='pages/test.html';
+		}
+		function download(t){
+			var id = t.getAttribute("data-id");
+			var url = getHead()+"book/download?id="+id;
+			
+	        var form = document.createElement("a");
+	        form.setAttribute("href", url);
+	        document.body.appendChild(form);
+	        form.click();
+	        form.remove();
+			
+//			var data = {'id':id};
+//			post('book/download',data,function(res){
+//				console.log(res);
+//			},'json')
 		}
 	</script>
 </html>

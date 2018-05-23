@@ -2,7 +2,7 @@
 //import cacheUtil from './util/cacheUtils.js'
 //import config from '../config.js'
 var head='http';
-var realm = 'localhost';
+var realm = '192.168.1.102';
 var port = 8052;
 var havePort=true;
 var loginSaveTime=1000*10*30;
@@ -25,22 +25,25 @@ function getStore(name){
 	var d = window.localStorage.getItem(name);
 	return d;
 }
-
-    //添加url传送信息
-function addUrl (url,obj){
-    //如果省略url，则为post请求，令obj为url，令url为null
-    if(arguments.length==1){
-        obj=url;
-        url=null;
-    }
-    var target = getStore("user");
+function addData(obj){
+	var target = getStore("user");
  	if(target!='undefined' && target!=null){
  		target = JSON.parse(target);
  		if(target.id!='undefined' && target.id != null){
 			obj.target = target.id;	
  		}
  	}
+ 	return obj;
+}
+//添加url传送信息
+function addUrl (url,obj){
+    //如果省略url，则为post请求，令obj为url，令url为null
+    if(arguments.length==1){
+        obj=url;
+        url=null;
+    }
     
+    addData(obj);
     //url不为空(get请求: 设置url信息)
     if(!!url){
     	var url = getHead()+url;
@@ -121,7 +124,7 @@ function success(fn,ojson,xhr){
                 }
                 fn(odata);
             }else{
-                odata="request was unsuccessful: "+xhr.status;
+                odata="request was unsuccessful:"+xhr.status;
                 fn(odata);
             }
         }
